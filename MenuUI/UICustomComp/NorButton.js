@@ -1,5 +1,6 @@
 import { TouchableOpacity } from "react-native";
 import { Text, StyleSheet} from 'react-native';
+import { colors } from "../../colors";
 
 //Normal Button
 export default function NorButton(props) {
@@ -9,14 +10,14 @@ export default function NorButton(props) {
         appButtonContainer: {
           elevation: 8,
           width: "100%",
-          backgroundColor: "#400022",
+          backgroundColor: colors.PrimaryColor,
           borderRadius: 25,
           marginTop: 10,
           paddingVertical: 10,
           paddingHorizontal: 12
         },
         appButtonText: {
-          fontSize: 18,
+          fontSize: 25,
           color: "#fff",
           fontWeight: "bold",
           alignSelf: "center",

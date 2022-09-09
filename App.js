@@ -7,6 +7,7 @@ import { StatusBar } from 'expo-status-bar';
 
 import Home from './MenuUI/Home';
 import Credits from './MenuUI/Credits';
+import SelectPlayers from './MenuUI/SelectPlayers';
 
 const Stack = createNativeStackNavigator();
 
@@ -32,6 +33,7 @@ export default function App() {
       <StatusBar style="auto" hidden/>
       <Stack.Navigator initialRouteName='Home'>
         <Stack.Screen name="Home" component={Home} options={{headerShown:false}}/>
+        <Stack.Screen name="SelPlayers" component={SelectPlayers} options={{headerShown:false}}/>
         <Stack.Screen name="Credits" component={Credits} options={{headerShown:false}}/>
       </Stack.Navigator>
     </NavigationContainer>
