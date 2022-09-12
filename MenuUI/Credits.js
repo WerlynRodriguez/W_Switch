@@ -20,7 +20,7 @@ export default function Credits({navigation}) {
                 
                 
             </ImageBackground>
-            <View style={{position:"absolute",top:0,left:0,right:0,backgroundColor:colors.tableColor,height:60,alignItems:"center"}}>
+            <View style={{position:"absolute",top:0,left:0,right:0,backgroundColor:colors.tableColor,height:"10%",alignItems:"center"}}>
                 <Text style={{fontSize:50,color:colors.white,fontWeight:"bold"}}>Credits</Text>
             </View>
             <View style={{position:"absolute",bottom:0,left:0,marginBottom:defMargin,marginLeft:defMargin,width:150}}>

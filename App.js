@@ -8,6 +8,7 @@ import { StatusBar } from 'expo-status-bar';
 import Home from './MenuUI/Home';
 import Credits from './MenuUI/Credits';
 import SelectPlayers from './MenuUI/SelectPlayers';
+import Playing from './MenuUI/Playing';
 
 const Stack = createNativeStackNavigator();
 
@@ -28,16 +29,18 @@ export default function App() {
   }
 
   //Principal tree Navigator
-  return (
+  return ( <Playing/> );
+  /*return (
     <NavigationContainer>
       <StatusBar style="auto" hidden/>
       <Stack.Navigator initialRouteName='Home'>
         <Stack.Screen name="Home" component={Home} options={{headerShown:false}}/>
         <Stack.Screen name="SelPlayers" component={SelectPlayers} options={{headerShown:false}}/>
         <Stack.Screen name="Credits" component={Credits} options={{headerShown:false}}/>
+        <Stack.Screen name="Playing" component={Playing} options={{headerShown:false}}/>
       </Stack.Navigator>
     </NavigationContainer>
-  );
+  );*/
 }
 
 /*<GameEngine style={{position: 'absolute',top: 0,left: 0,right: 0,bottom: 0,backgroundColor:"white"}}>
