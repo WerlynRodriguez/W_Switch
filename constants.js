@@ -16,7 +16,10 @@ export const getAspectRatio = () => {
         height = width / ratio;
     }
 
-    console.log(width, height);
     return { width, height };
 }
 
+// Game constants in percentage (for responsive) This will be in a db later precalculated
+export const SizePlayer = { width: 4.245, height: 7.291 };
+export const SizeFloor = { width: 100, height: 7.291 };
+export const VelocityYPlayer = 1.276;
