@@ -31,11 +31,13 @@ const SpritePlayer = props => {
 export default (world,color, pos, size,n) => {
     const body = Matter.Bodies.rectangle(pos.x, pos.y, size.width, size.height, {
     label: 'player'+n,
-    isStatic: false});
+    isSensor: true,
+    });
     
     var isFalling = true;
+    var isInFloor = false;
     var toUp = false;
-    // pos 0: Up, 1: Down, 2: Left, 3: Right
+    // pos 0: Up, 1: Down, 2: Left, 3: Right For players
     var sensors = [false,false, false, false];
 
     Matter.World.add(world, body);
@@ -49,80 +51,82 @@ export default (world,color, pos, size,n) => {
     };
 }
 
-export function ChangeToUp(player, v) {
-    if (v) {if (player.vars.isFalling) {return false;}}
-    
+export function ChangeToUp(player) {
+    if (player.vars.isFalling) {return;}
+
     player.vars.toUp = !player.vars.toUp;
+}
+
+export function Falling(player, velocity) {
     if (player.vars.toUp) {
-        if (player.vars.sensors[0]) {
-            return false;
+        if (!player.vars.sensors[0]){
+            Matter.Body.translate(player.body, {x: 0, y: -velocity});
+            player.vars.isFalling = true;
+        } else {
+            player.vars.isFalling = false;
         }
     } else {
-        if (player.vars.sensors[1]) {
-            return false;
+        if (!player.vars.sensors[1]){
+            Matter.Body.translate(player.body, {x: 0, y: velocity});
+            player.vars.isFalling = true;
+        } else {
+            player.vars.isFalling = false;
         }
     }
-    player.vars.isFalling = true;
-    
-    return true;
 }
 
-export function Falling(player, v, velocity) {
-    if (v) {if (!player.vars.isFalling) {return false;}}
+export function TouchFloor(player, status, contacts) {
+    //Check if floor is up down left or right
+    var vertex = contacts[contacts.length > 2? 2:0].vertex;
+    if(player.body.position.y > vertex.y) {
+        player.vars.sensors[0] = status;
+    } else if (player.body.position.y < vertex.y) {
+        player.vars.sensors[1] = status;
+    } else if (player.body.position.x > vertex.x) {
+        player.vars.sensors[2] = status;
+    } else if (player.body.position.x < vertex.x) {
+        player.vars.sensors[3] = status;
+    } else {
+        console.log("Error in TouchFloor");
+    }
 
-    Matter.Body.translate(player.body, { x: 0, y: player.vars.toUp ? -velocity : velocity });
-}
-
-export function TouchFloor(player, v) {
-    if (v) {if (!player.vars.isFalling) {return false;}}
-
-    player.vars.isFalling = false;
-    return true;    
+    /*if (player.vars.toUp){
+        player.vars.sensors[status? 0:1] = status;
+    } else {
+        player.vars.sensors[status? 1:0] = status;
+    }*/
 }
 
 //Where is Touching me
 function WITM (playerA, playerB, vertex, status){
-    if (playerA.body.position.x > playerB.body.position.x && vertex.x > playerB.body.position.x) {
+    /*if (playerA.body.position.x > playerB.body.position.x && vertex.x > playerB.body.position.x) {
         playerA.vars.sensors[2] = status;
         playerB.vars.sensors[3] = status;
+        return "L";
     }
     else if (playerA.body.position.x <= playerB.body.position.x && vertex.x <= playerB.body.position.x) {
         playerA.vars.sensors[3] = status;
         playerB.vars.sensors[2] = status;
+        return "R";
     }
-    else if (playerA.body.position.y > playerB.body.position.y && vertex.y > playerB.body.position.y) {
+    else */if (playerA.body.position.y > playerB.body.position.y && vertex.y > playerB.body.position.y) {
         playerA.vars.sensors[0] = status;
         playerB.vars.sensors[1] = status;
+        return "U";
     }
-    else {
+    /*else {
         playerA.vars.sensors[1] = status;
         playerB.vars.sensors[0] = status;
-    }
+        return "D";
+    }*/
 }
 
 //Start Touching Player
-export function StTgPr(playerA, playerB, vertex) {
-    // Determine where is the other player
-    WITM(playerA,playerB,vertex,true);
-
-    // ALL posible cases playerA
-    if (playerA.vars.isFalling) {
-        if (!playerB.vars.isFalling) {
-            playerA.vars.isFalling = false;
-        } else if (playerA.vars.toUp != playerB.vars.toUp) {
-            playerA.vars.isFalling = false;
-            playerB.vars.isFalling = false;
-        }
-    }
-    //All posible cases playerB
-    if (playerB.vars.isFalling) {
-        if (!playerA.vars.isFalling) {
-            playerB.vars.isFalling = false;
-        }
-    }
+export function StTgPlayer(playerA, playerB, vertex) {
+    let side = WITM(playerA, playerB, vertex, true);
 }
 
 //End Touching Player
-export function EdTgPr(playerA, playerB, vertex){
-    WITM(playerA,playerB,vertex,false);
+export function EnTgPlayer(playerA, playerB, vertex){
+    let side = WITM(playerA, playerB, vertex, false);
 }
